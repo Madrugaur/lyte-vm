@@ -1,0 +1,158 @@
+movc register_a register_b register_c
+{
+	make new 32 bit word
+	pack movc_opcode to opcode_lsb
+	pack register_a to reg_a_lsb
+	pack register_b to reg_b_lsb
+	pack register_c to reg_c_lsb
+	put word into instruction_list
+}
+segl register_a register_b register_c
+{
+	make new 32 bit word
+	pack segl_opcode to opcode_lsb
+	pack register_a to reg_a_lsb
+	pack register_b to reg_b_lsb
+	pack register_c to reg_c_lsb
+	put word into instruction_list
+}
+segs register_a register_b register_c
+{
+	make new 32 bit word
+	pack segs_opcode to opcode_lsb
+	pack register_a to reg_a_lsb
+	pack register_b to reg_b_lsb
+	pack register_c to reg_c_lsb
+	put word into instruction_list
+}
+add register_a register_b register_c
+{
+	make new 32 bit word
+	pack add_opcode to opcode_lsb
+	pack register_a to reg_a_lsb
+	pack register_b to reg_b_lsb
+	pack register_c to reg_c_lsb
+	put word into instruction_list
+}
+mult register_a register_b register_c
+{
+	make new 32 bit word
+	pack mult_opcode to opcode_lsb
+	pack register_a to reg_a_lsb
+	pack register_b to reg_b_lsb
+	pack register_c to reg_c_lsb
+	put word into instruction_list
+}
+nand register_a register_b register_c
+{
+	make new 32 bit word
+	pack nand_opcode to opcode_lsb
+	pack register_a to reg_a_lsb
+	pack register_b to reg_b_lsb
+	pack register_c to reg_c_lsb
+	put word into instruction_list
+}
+halt
+{
+	make new 32 bit word
+	pack halt_opcode to opcode_lsb
+	put word into instruction_list
+}
+map register_b register_c
+{
+	make new 32 bit word
+	pack map_opcode to opcode_lsb
+	pack register_b to reg_b_lsb
+	pack register_c to reg_c_lsb
+	put word into instruction_list
+}
+umap register_c
+{
+	make new 32 bit word
+	pack umap_opcode to opcode_lsb
+	pack register_c to reg_c_lsb
+	put word into instruction_list
+}
+inpt register_c
+{
+	make new 32 bit word
+	pack inpt_opcode to opcode_lsb
+	pack register_c to reg_c_lsb
+	put word into instruction_list
+}
+lprg register_b (memory segment) register_c (line)
+{
+	make new 32 bit word
+	pack lprg_opcode to opcode_lsb
+	pack register_b to reg_b_lsb
+	pack register_c to reg_c_lsb
+	put word into instruction_list
+}
+lval register_load value
+{
+	make new 32 bit word
+	pack load_opcode to opcode_lsb
+	pack register_load to special_register_lsb
+	put word into instruction_list
+	
+	make new 32 bit word
+	pack value to 0
+	put word into instruction_list
+}
+
+out register number_flag
+{
+	make new 32 bit word
+	pack print_opcode to opcode_lsb
+	pack register to special_register_lsb
+	pack number_flab to print_number_flag
+	put word into instruction_list
+}
+Macros:
+print_s string 
+{
+	for each char in string
+	 load 7 char
+	 if char is number
+	  print 7 1
+	 else
+	  print 7 0
+}
+sub register_a register_b register_c
+{
+	make new 32 bit word
+	pack subtract_opcode to opcode_lsb
+	pack register_a to reg_a_lsb
+	pack register_b to reg_b_lsb
+	pack register_c to reg_c_lsb
+	put word into instruction_list	
+}
+
+LSB (the index of the first bit of the field [start counting at 0]):
+opcode_lsb           = 27
+reg_a_lsb            = 6
+reg_b_lsb            = 3
+reg_c_lsb            = 0
+special_register_lsb = 24 
+print_number_flag    = 23
+
+STANDARD 32-bit WORD:
+/---------------------------------\
+|          extra            b     |
+|            |              |     |
+|     vvvvvvvvvvvvvvvvvv   vvv    |
+| 1111000000000000000000111000111 |
+| ^^^^                  ^^^   ^^^ |
+|  |                     |     |  |
+| opcode                 a     c  |
+\---------------------------------/
+SPECIAL 32-bit WORD:
+/---------------------------------\
+|      a                          |
+|      |                          |
+|     vvv                         |
+| 1111000100000000000000000000000 |
+| ^^^^   ^                        |
+|  |     L number flag            |
+| opcode                          |
+\---------------------------------/
